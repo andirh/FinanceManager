@@ -1,5 +1,6 @@
 package main.domain.account;
 
+import main.adapters.input.CsvFileReader;
 import main.adapters.input.FileReader;
 import main.adapters.output.CsvFileWriter;
 import main.adapters.output.FileWriter;
@@ -13,7 +14,7 @@ public class AccountManager {
 
     public AccountManager() {
         fileWriter = new CsvFileWriter();
-        fileReader = null;
+        fileReader = new CsvFileReader();
     }
 
     public Account createAccount(String accountName, Owner owner, double balance){
@@ -29,8 +30,7 @@ public class AccountManager {
     }
 
     public Account loadExistingAccount(File accountDetails){
-        System.out.println("Loaded File");
-        return null;
+        return fileReader.extractAccountDetails(accountDetails);
     }
 
 }

@@ -1,6 +1,5 @@
 package main;
 
-import main.domain.account.Account;
 import main.domain.account.AccountManager;
 import main.domain.account.Owner;
 
@@ -18,7 +17,7 @@ public class FinanceManager {
         AccountManager accountManager = new AccountManager();
         File accountDetails = null;
         for (File file : Objects.requireNonNull(accountFiles.listFiles())) {
-            if (NAME.equalsIgnoreCase(file.getName())){
+            if ((NAME + ".csv").equalsIgnoreCase(file.getName())){
                 accountDetails = file;
                 break;
             }
@@ -27,7 +26,7 @@ public class FinanceManager {
         if (accountDetails != null){
             accountManager.loadExistingAccount(accountDetails);
         } else {
-            accountManager.createAccount(NAME, OWNER, 666);
+            accountManager.createAccount(NAME, OWNER, 666.6);
         }
 
     }
