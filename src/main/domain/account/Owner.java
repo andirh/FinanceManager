@@ -1,4 +1,4 @@
-package main.domain.model;
+package main.domain.account;
 
 public class Owner {
 
@@ -10,4 +10,11 @@ public class Owner {
         this.lastName = lastName;
     }
 
+    public String getFistName() {
+        return fistName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
 }

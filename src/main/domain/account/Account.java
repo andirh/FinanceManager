@@ -1,20 +1,19 @@
-package main.domain.model;
+package main.domain.account;
 
 public class Account {
 
     private double balance = 0;
-
-    private final long accountNumber;
+    private String accountName;
     private Owner owner;
 
-    public Account(long accountNumber, Owner owner) {
-        this.accountNumber = accountNumber;
+    public Account(String accountName, Owner owner) {
+        this.accountName = accountName;
         this.owner = owner;
     }
 
-    public Account(double balance, long accountNumber, Owner owner) {
+    public Account(String accountName, Owner owner, double balance) {
         this.balance = balance;
-        this.accountNumber = accountNumber;
+        this.accountName = accountName;
         this.owner = owner;
     }
 
@@ -22,8 +21,8 @@ public class Account {
         return balance;
     }
 
-    public long getAccountNumber() {
-        return accountNumber;
+    public String getAccountName() {
+        return accountName;
     }
 
     public Owner getOwner() {

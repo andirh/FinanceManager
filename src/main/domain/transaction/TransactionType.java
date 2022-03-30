@@ -1,8 +1,8 @@
-package main.domain.model;
+package main.domain.transaction;
 
 public enum TransactionType {
 
     DEBIT,
-    PAYMENT;
+    PAYMENT
 
 }

@@ -1,4 +1,4 @@
-package main.domain.model;
+package main.domain.transaction;
 
 import java.time.Month;
 import java.util.List;
