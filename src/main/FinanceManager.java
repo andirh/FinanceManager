@@ -1,7 +1,7 @@
 package main;
 
-import main.model.Account;
-import main.model.Owner;
+import main.domain.model.Account;
+import main.domain.model.Owner;
 
 public class FinanceManager {
 
