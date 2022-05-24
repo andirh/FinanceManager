@@ -1,5 +1,5 @@
 package output;
-
+/*
 import main.domain.account.Account;
 
 import java.io.BufferedWriter;
@@ -31,3 +31,4 @@ public class CsvFileWriter implements FileWriter{
 
     }
 }
+*/

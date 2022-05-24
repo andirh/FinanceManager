@@ -5,16 +5,9 @@ import java.util.Random;
 public class Account {
 
     private final int id;
-    private double balance = 0;
+    private double balance = 0.0;
     private final String accountName;
     private final Owner owner;
-
-    public Account(String accountName, Owner owner) {
-        this.accountName = accountName;
-        this.owner = owner;
-        Random rnd = new Random();
-        this.id = 10000000 + rnd.nextInt(90000000);
-    }
 
     public Account(String accountName, Owner owner, double balance, int id) {
         this.balance = balance;
@@ -22,6 +15,7 @@ public class Account {
         this.owner = owner;
         this.id = id;
     }
+
 
     public int getId() {
         return id;

@@ -1,6 +1,5 @@
-package comparator;
+package comparators;
 
-import statement.Statement;
 import transaction.Transaction;
 
 import java.util.Comparator;

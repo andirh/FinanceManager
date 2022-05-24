@@ -23,16 +23,6 @@ public class Transaction {
         }
     }
 
-    public Transaction(String category, double amount, TransactionType type) throws InvalidAmountException {
-        this.category = Objects.requireNonNullElse(category, "");
-        this.amount = amount;
-        this.type = type;
-        date = new Date();
-        if (this.amount <= 0.0) {
-            throw new InvalidAmountException();
-        }
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

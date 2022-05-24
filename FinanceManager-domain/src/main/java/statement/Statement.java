@@ -1,6 +1,6 @@
 package statement;
 
-import comparator.StatementComparator;
+import comparators.StatementComparator;
 import exceptions.InvalidStatementException;
 import exceptions.NoDebitsException;
 import exceptions.NoPaymentsException;
