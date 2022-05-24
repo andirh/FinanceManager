@@ -1,5 +1,7 @@
 package account;
 
+import exceptions.AccountNotFoundException;
+
 import java.util.List;
 
 
@@ -11,4 +13,6 @@ public interface AccountRepository {
     void update(Account account);
 
     List<Account> list();
+
+    Account getAccountById(int id) throws AccountNotFoundException;
 }

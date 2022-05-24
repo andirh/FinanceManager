@@ -10,15 +10,14 @@ import java.util.*;
 
 public abstract class Statement {
 
-    public Statement(List<Transaction> transactions) {
+    private final SortedSet<Transaction> transactions;
+    //TODO: Summe beim lesen direkt berechnen
+    private double sum;
 
+    public Statement(List<Transaction> transactions) {
         this.transactions = new TreeSet<>(new StatementComparator());
         this.transactions.addAll(transactions);
     }
-
-    SortedSet<Transaction> transactions = new TreeSet<>(new StatementComparator());
-    //TODO: Summe beim lesen direkt berechnen
-    double sum;
 
     public SortedSet<Transaction> getAllTransactions() throws InvalidStatementException {
         if(transactions.size() == 0){
