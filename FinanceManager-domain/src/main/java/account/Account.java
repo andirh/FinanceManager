@@ -4,10 +4,10 @@ import java.util.Random;
 
 public class Account {
 
-    private int id;
+    private final int id;
     private double balance = 0;
-    private String accountName;
-    private Owner owner;
+    private final String accountName;
+    private final Owner owner;
 
     public Account(String accountName, Owner owner) {
         this.accountName = accountName;
