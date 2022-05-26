@@ -5,6 +5,7 @@ import account.AccountRepository;
 import exceptions.AccountAlreadyExistsException;
 import exceptions.AccountNotFoundException;
 import exceptions.InvalidAccountException;
+import exceptions.InvalidIdException;
 import mapping.AccountDataMapper;
 import persistency.account.AccountFileManager;
 
@@ -32,29 +33,38 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public List<Account> list() throws InvalidAccountException {
+    public List<Account> list() throws InvalidAccountException, InvalidIdException {
         return dataMapper.extractAccounts(accountFileManager.getAccountDataFromFile());
     }
 
     @Override
-    public Account getAccountById(int id) throws InvalidAccountException, AccountNotFoundException {
-        List<Account> accounts = dataMapper.extractAccounts(accountFileManager.getAccountDataFromFile());
-        for (Account account : accounts) {
-            if(account.getId() == id){
-                return account;
+    public Account getAccountById(long id) throws AccountNotFoundException {
+        try {
+            List<Account> accounts = dataMapper.extractAccounts(accountFileManager.getAccountDataFromFile());
+            for (Account account : accounts) {
+                if (account.getId() == id) {
+                    return account;
+                }
             }
+        } catch (InvalidIdException | InvalidAccountException e) {
+            throw new AccountNotFoundException();
         }
         throw new AccountNotFoundException();
     }
 
     @Override
-    public Account getAccountByName(String accountName) throws InvalidAccountException, AccountNotFoundException {
-        List<Account> accounts = dataMapper.extractAccounts(accountFileManager.getAccountDataFromFile());
-        for (Account account : accounts) {
-            if(account.getAccountName().equals(accountName)){
-                return account;
+    public Account getAccountByName(String accountName) throws AccountNotFoundException {
+        try {
+            List<Account> accounts = dataMapper.extractAccounts(accountFileManager.getAccountDataFromFile());
+            for (Account account : accounts) {
+                if (account.getAccountName().equals(accountName)) {
+                    return account;
+                }
             }
+        } catch (InvalidIdException | InvalidAccountException e) {
+            throw new AccountNotFoundException();
         }
         throw new AccountNotFoundException();
     }
+
 }

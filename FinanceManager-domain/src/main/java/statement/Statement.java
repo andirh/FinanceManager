@@ -14,7 +14,7 @@ public abstract class Statement {
     private final SortedSet<Transaction> transactions;
     //TODO: Summe beim lesen direkt berechnen
     private double sum;
-    private long id;
+    private final long id;
 
     public Statement(List<Transaction> transactions, long id) throws InvalidIdException {
         if(!(id > 1000000000L && id < 9999999999L)){

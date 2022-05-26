@@ -1,5 +1,7 @@
 package account;
 
+import exceptions.InvalidIdException;
+
 public class AccountBuilder {
 
     private long id;
@@ -7,9 +9,9 @@ public class AccountBuilder {
     private String accountName;
     private Owner owner;
 
-    public Account build() {
-        if(this.id < 1000000000){
-            this.id = 0;
+    public Account build() throws InvalidIdException {
+        if(!(id > 1000000000L && id < 9999999999L)){
+            throw new InvalidIdException();
         }
         return new Account(accountName, owner, balance, id);
     }

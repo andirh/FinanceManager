@@ -3,6 +3,7 @@ package mapping;
 import account.Account;
 import account.AccountBuilder;
 import account.Owner;
+import exceptions.InvalidIdException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 public class AccountDataMapper {
 
 
-    public List<Account> extractAccounts(List<String[]> accountData) {
+    public List<Account> extractAccounts(List<String[]> accountData) throws InvalidIdException {
         AccountBuilder accountBuilder = new AccountBuilder();
         List<Account> accounts = new ArrayList<>();
         for (String[] accountInformation : accountData) {

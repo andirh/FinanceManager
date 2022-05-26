@@ -3,6 +3,7 @@ package account;
 import exceptions.AccountAlreadyExistsException;
 import exceptions.AccountNotFoundException;
 import exceptions.InvalidAccountException;
+import exceptions.InvalidIdException;
 
 import java.util.List;
 
@@ -14,9 +15,10 @@ public interface AccountRepository {
 
     void update(Account account) throws AccountAlreadyExistsException;
 
-    List<Account> list() throws InvalidAccountException;
+    List<Account> list() throws InvalidAccountException, InvalidIdException;
 
-    Account getAccountById(int id) throws AccountNotFoundException, InvalidAccountException;
+    Account getAccountById(long id) throws AccountNotFoundException;
 
-    Account getAccountByName(String accountName) throws InvalidAccountException, AccountNotFoundException;
+    Account getAccountByName(String accountName) throws  AccountNotFoundException;
+
 }

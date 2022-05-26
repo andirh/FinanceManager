@@ -1,31 +1,31 @@
 package account;
 
-import transaction.Transaction;
-import transaction.TransactionManager;
 
-import javax.security.auth.login.AccountException;
-import java.io.File;
+import exceptions.AccountAlreadyExistsException;
+import exceptions.AccountNotFoundException;
 
-//TODO: Application oder Transform layer
 
 public class AccountManager {
 
-//gets list of accounts and selects right one
+    private final AccountRepository accountRepository;
 
 
-    public AccountManager() {
+    public AccountManager(AccountRepository accountRepository) {
+        this.accountRepository = accountRepository;
     }
 
-    public Account loadAccount(String accountName){
-        return null;
+    public Account loadAccountByName(String accountName) throws AccountNotFoundException {
+        return accountRepository.getAccountByName(accountName);
     }
 
-    public Account createNewAccount(String accountName, Owner owner){
-        return null;
+    public Account loadAccountById(long id) throws AccountNotFoundException {
+        return accountRepository.getAccountById(id);
     }
 
-    public Account loadExistingAccount(File accountDetails) throws AccountException {
-        return null;
+    public void createNewAccount(Account account) throws AccountAlreadyExistsException {
+        accountRepository.add(account);
     }
+
+
 
 }
