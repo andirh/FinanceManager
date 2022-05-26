@@ -1,5 +1,8 @@
 package account;
 
+import transaction.Transaction;
+import transaction.TransactionManager;
+
 import javax.security.auth.login.AccountException;
 import java.io.File;
 
@@ -9,14 +12,15 @@ public class AccountManager {
 
 //gets list of accounts and selects right one
 
+
     public AccountManager() {
     }
 
-    public Account loadAccount(String accountName, Owner owner, double balance, int id){
+    public Account loadAccount(String accountName){
         return null;
     }
 
-    public Account createAccount(String accountName, Owner owner){
+    public Account createNewAccount(String accountName, Owner owner){
         return null;
     }
 

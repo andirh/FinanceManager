@@ -1,15 +1,14 @@
 package account;
 
-import java.util.Random;
 
 public class Account {
 
-    private final int id;
+    private final long id;
     private double balance = 0.0;
     private final String accountName;
     private final Owner owner;
 
-    public Account(String accountName, Owner owner, double balance, int id) {
+    public Account(String accountName, Owner owner, double balance, long id) {
         this.balance = balance;
         this.accountName = accountName;
         this.owner = owner;
@@ -17,7 +16,7 @@ public class Account {
     }
 
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

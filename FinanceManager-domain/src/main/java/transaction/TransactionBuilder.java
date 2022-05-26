@@ -5,7 +5,7 @@ import exceptions.InvalidAmountException;
 import java.util.Date;
 import java.util.Objects;
 
-public class TransactionFactory {
+public class TransactionBuilder {
 
     String category;
     double amount;
@@ -21,22 +21,22 @@ public class TransactionFactory {
         return new Transaction(category, amount, date, type);
     }
 
-    public TransactionFactory category(String category){
+    public TransactionBuilder category(String category){
         this.category = category;
         return this;
     }
 
-    public TransactionFactory amount(double amount){
+    public TransactionBuilder amount(double amount){
         this.amount = amount;
         return this;
     }
 
-    public TransactionFactory listNumber(Date date){
+    public TransactionBuilder listNumber(Date date){
         this.date = date;
         return this;
     }
 
-    public TransactionFactory type(TransactionType type){
+    public TransactionBuilder type(TransactionType type){
         this.type = type;
         return this;
     }

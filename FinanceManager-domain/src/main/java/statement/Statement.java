@@ -1,6 +1,7 @@
 package statement;
 
 import comparators.StatementComparator;
+import exceptions.InvalidIdException;
 import exceptions.InvalidStatementException;
 import exceptions.NoDebitsException;
 import exceptions.NoPaymentsException;
@@ -13,8 +14,13 @@ public abstract class Statement {
     private final SortedSet<Transaction> transactions;
     //TODO: Summe beim lesen direkt berechnen
     private double sum;
+    private long id;
 
-    public Statement(List<Transaction> transactions) {
+    public Statement(List<Transaction> transactions, long id) throws InvalidIdException {
+        if(!(id > 1000000000L && id < 9999999999L)){
+            throw new InvalidIdException();
+        }
+        this.id = id;
         this.transactions = new TreeSet<>(new StatementComparator());
         this.transactions.addAll(transactions);
     }
@@ -72,5 +78,7 @@ public abstract class Statement {
         transactions.add(transaction);
     }
 
-
+    public long getId() {
+        return id;
+    }
 }
