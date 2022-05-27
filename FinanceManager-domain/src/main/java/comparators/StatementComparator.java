@@ -12,11 +12,10 @@ public class StatementComparator implements Comparator<Transaction> {
         for (int i = 0; i <= 2; i++) {
             if (Integer.parseInt(dateArray1[i]) > Integer.parseInt(dateArray2[i])) {
                 return 1;
-            } else if (Integer.parseInt(dateArray1[i]) > Integer.parseInt(dateArray2[i])) {
+            } else if (Integer.parseInt(dateArray1[i]) < Integer.parseInt(dateArray2[i])) {
                 return -1;
             }
         }
         return 0;
-
     }
 }

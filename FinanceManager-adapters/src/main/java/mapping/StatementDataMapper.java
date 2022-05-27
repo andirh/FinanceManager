@@ -1,6 +1,5 @@
 package mapping;
 
-import account.Account;
 import exceptions.*;
 import statement.Statement;
 import statement.StatementBuilder;

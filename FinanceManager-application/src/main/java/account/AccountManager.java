@@ -31,7 +31,7 @@ public class AccountManager {
         this.accountRepository.update(accountOld, accountNew);
     }
 
-    public void executeTransaction(Account account, Transaction transaction){
+    public void executeTransactionOnAccount(Account account, Transaction transaction){
         if (transaction.getType().isDebit()){
             account.decreaseBalance(transaction.getAmount());
         } else {

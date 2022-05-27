@@ -20,7 +20,7 @@ public class StatementRepositoryImpl implements StatementRepository {
 
     @Override
     public void remove(Statement statement) {
-        statementFileManager.removeStatementFile(statement.getStatementId());
+        statementFileManager.removeStatementFile(statement.getStatementId(), statement.getAccountId());
     }
 
     @Override
@@ -30,44 +30,44 @@ public class StatementRepositoryImpl implements StatementRepository {
     }
 
     @Override
-    public List<Statement> list() throws InvalidStatementException {
+    public List<Statement> list(long accountId) throws InvalidStatementException {
         try {
-            return dataMapper.extractStatements(statementFileManager.getStatementDataFromFile());
+            return dataMapper.extractStatements(statementFileManager.getStatementDataFromFile(accountId));
         } catch (IllegalDateException | InvalidIdException | InvalidTransactionTypeException | InvalidAmountException | InvalidStatementException e) {
             throw new InvalidStatementException();
         }
     }
 
     @Override
-    public List<Statement> getMonthlyStatements() throws  InvalidStatementException{
-        List<Statement> monthlyStatements = new ArrayList<>();
-        List<Statement> statements = list();
+    public List<MonthlyStatement> getMonthlyStatements(long accountId) throws  InvalidStatementException{
+        List<MonthlyStatement> monthlyStatements = new ArrayList<>();
+        List<Statement> statements = list(accountId);
         for (Statement statement: statements) {
             if(statement instanceof MonthlyStatement){
-                monthlyStatements.add(statement);
+                monthlyStatements.add((MonthlyStatement) statement);
             }
         }
         return monthlyStatements;
     }
 
     @Override
-    public List<Statement> getYearlyStatements() throws InvalidStatementException {
-        List<Statement> yearlyStatements = new ArrayList<>();
-        List<Statement> statements = list();
+    public List<YearlyStatement> getYearlyStatements(long accountId) throws InvalidStatementException {
+        List<YearlyStatement> yearlyStatements = new ArrayList<>();
+        List<Statement> statements = list(accountId);
         for (Statement statement: statements) {
-            if(statement instanceof MonthlyStatement){
-                yearlyStatements.add(statement);
+            if(statement instanceof YearlyStatement){
+                yearlyStatements.add((YearlyStatement) statement);
             }
         }
         return yearlyStatements;
     }
 
     @Override
-    public Statement getOverallStatement() throws NoStatementFoundException, InvalidStatementException {
-        List<Statement> statements = list();
+    public OverallStatement getOverallStatement(long accountId) throws NoStatementFoundException, InvalidStatementException {
+        List<Statement> statements = list(accountId);
         for (Statement statement: statements) {
             if(statement instanceof OverallStatement){
-                return statement;
+                return (OverallStatement) statement;
             }
         }
         throw new NoStatementFoundException();

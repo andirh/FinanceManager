@@ -13,11 +13,11 @@ public interface StatementRepository {
 
     void update(Statement statement) throws InvalidStatementException, StatementAlreadyExistsException;
 
-    List<Statement> list() throws InvalidStatementException;
+    List<Statement> list(long accountId) throws InvalidStatementException;
 
-    List<Statement> getMonthlyStatements() throws  InvalidStatementException;
+    List<MonthlyStatement> getMonthlyStatements(long accountId) throws  InvalidStatementException;
 
-    List<Statement> getYearlyStatements() throws NoStatementFoundException, InvalidStatementException;
+    List<YearlyStatement> getYearlyStatements(long accountId) throws NoStatementFoundException, InvalidStatementException;
 
-    Statement getOverallStatement() throws NoStatementFoundException, InvalidStatementException;
+    OverallStatement getOverallStatement(long accountId) throws NoStatementFoundException, InvalidStatementException;
 }

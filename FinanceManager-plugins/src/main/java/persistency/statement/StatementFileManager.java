@@ -10,8 +10,8 @@ import java.util.Objects;
 
 public class StatementFileManager {
 
-    public List<String[]> getStatementDataFromFile() throws InvalidStatementException {
-        File files = new File("src/resources/statement-repository");
+    public List<String[]> getStatementDataFromFile(long accountId) throws InvalidStatementException {
+        File files = new File("src/resources/statement-repository/" + accountId);
         List<String[]> statementFiles = new ArrayList<>();
         for (File file : Objects.requireNonNull(files.listFiles())) {
             if (file.getName().endsWith(".csv")) {
@@ -31,8 +31,8 @@ public class StatementFileManager {
     }
 
     public void createStatementFile(String statementData) throws StatementAlreadyExistsException {
-        File files = new File("src/resources/statement-repository");
         String[] statementMetadata = statementData.split("\\r?\\n")[0].split(",");
+        File files = new File("src/resources/statement-repository/" + statementMetadata[0]);
         File[] fileList = Objects.requireNonNull(files.listFiles());
         for (File file: fileList) {
             if (file.getName().equals(statementMetadata[1] + ".csv")){
@@ -47,8 +47,8 @@ public class StatementFileManager {
         }
     }
 
-    public void removeStatementFile(String statementId){
-        File files = new File("src/resources/statement-repository");
+    public void removeStatementFile(String statementId, long accountId){
+        File files = new File("src/resources/statement-repository/" + accountId);
         File[] fileList = Objects.requireNonNull(files.listFiles());
         for (File file: fileList) {
             if (file.getName().equals(statementId + ".csv")){
