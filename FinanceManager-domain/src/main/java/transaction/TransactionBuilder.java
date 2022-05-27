@@ -2,6 +2,8 @@ package transaction;
 
 import exceptions.InvalidAmountException;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -15,10 +17,12 @@ public class TransactionBuilder {
 
     public Transaction build() throws InvalidAmountException {
         this.category = Objects.requireNonNullElse(category, "---");
+            SimpleDateFormat DateFor = new SimpleDateFormat("yyyy/MM/dd");
         if (date == null){
             date = new Date();
         }
-        return new Transaction(category, amount, date, type);
+        String stringDate = DateFor.format(date);
+        return new Transaction(category, amount, stringDate, type);
     }
 
     public TransactionBuilder category(String category){
@@ -31,8 +35,13 @@ public class TransactionBuilder {
         return this;
     }
 
-    public TransactionBuilder listNumber(Date date){
-        this.date = date;
+    public TransactionBuilder date(String date){
+        SimpleDateFormat DateFor = new SimpleDateFormat("yyyy/MM/dd");
+        try {
+            this.date = DateFor.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         return this;
     }
 

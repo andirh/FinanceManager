@@ -40,7 +40,7 @@ public class AccountFileManager {
             }
         }
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(new File(accountName+".csv")));
+            BufferedWriter writer = new BufferedWriter(new FileWriter(accountName+".csv"));
             writer.write(accountData);
         } catch (IOException e) {
             e.printStackTrace();

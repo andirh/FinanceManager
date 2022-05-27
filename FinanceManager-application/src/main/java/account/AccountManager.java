@@ -3,6 +3,7 @@ package account;
 
 import exceptions.AccountAlreadyExistsException;
 import exceptions.AccountNotFoundException;
+import transaction.Transaction;
 
 
 public class AccountManager {
@@ -26,6 +27,17 @@ public class AccountManager {
         accountRepository.add(account);
     }
 
+    public void updateAccount(Account accountOld, Account accountNew) throws AccountAlreadyExistsException {
+        this.accountRepository.update(accountOld, accountNew);
+    }
+
+    public void executeTransaction(Account account, Transaction transaction){
+        if (transaction.getType().isDebit()){
+            account.decreaseBalance(transaction.getAmount());
+        } else {
+            account.increaseBalance(transaction.getAmount());
+        }
+    }
 
 
 }

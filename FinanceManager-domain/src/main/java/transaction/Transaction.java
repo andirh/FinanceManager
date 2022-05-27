@@ -2,18 +2,17 @@ package transaction;
 
 import exceptions.InvalidAmountException;
 
-import java.util.Date;
 import java.util.Objects;
 
 public class Transaction {
 
     final String category;
     final double amount;
-    final Date date;
+    final String date;
     final TransactionType type;
 
 
-    public Transaction(String category, double amount, Date date, TransactionType type) throws InvalidAmountException {
+    public Transaction(String category, double amount, String date, TransactionType type) throws InvalidAmountException {
         this.category = Objects.requireNonNullElse(category, "");
         this.amount = amount;
         this.type = type;
@@ -44,7 +43,7 @@ public class Transaction {
         return amount;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 

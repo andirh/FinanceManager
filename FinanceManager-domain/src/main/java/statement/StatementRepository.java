@@ -1,23 +1,23 @@
 package statement;
 
 import account.Account;
-import exceptions.NoStatementFoundException;
+import exceptions.*;
 
 import java.util.List;
 
 
 public interface StatementRepository {
-    void add(Statement statement);
+    void add(Statement statement) throws InvalidStatementException, StatementAlreadyExistsException;
 
     void remove(Statement statement);
 
-    void update(Statement statement);
+    void update(Statement statement) throws InvalidStatementException, StatementAlreadyExistsException;
 
-    List<Statement> list();
+    List<Statement> list() throws InvalidStatementException;
 
-    List<Statement> getMonthlyStatements() throws NoStatementFoundException;
+    List<Statement> getMonthlyStatements() throws  InvalidStatementException;
 
-    List<Statement> getYearlyStatements() throws NoStatementFoundException;
+    List<Statement> getYearlyStatements() throws NoStatementFoundException, InvalidStatementException;
 
-    Statement getOverallStatement() throws NoStatementFoundException;
+    Statement getOverallStatement() throws NoStatementFoundException, InvalidStatementException;
 }

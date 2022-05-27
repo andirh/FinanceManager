@@ -12,15 +12,17 @@ import java.util.*;
 public abstract class Statement {
 
     private final SortedSet<Transaction> transactions;
-    //TODO: Summe beim lesen direkt berechnen
-    private double sum;
-    private final long id;
+    private final long accountId;
 
-    public Statement(List<Transaction> transactions, long id) throws InvalidIdException {
-        if(!(id > 1000000000L && id < 9999999999L)){
+    public abstract String toString();
+
+    public abstract String getStatementId();
+
+    public Statement(List<Transaction> transactions, long accountId) throws InvalidIdException {
+        if(!(accountId > 1000000000L && accountId < 9999999999L)){
             throw new InvalidIdException();
         }
-        this.id = id;
+        this.accountId = accountId;
         this.transactions = new TreeSet<>(new StatementComparator());
         this.transactions.addAll(transactions);
     }
@@ -66,19 +68,14 @@ public abstract class Statement {
         }
     }
 
-    public double getSum(){
-        double sum = 0.0;
-        for (Transaction transaction: transactions) {
-            sum += transaction.getAmount();
-        }
-        return sum;
-    }
 
     public void addTransaction(Transaction transaction){
         transactions.add(transaction);
     }
 
-    public long getId() {
-        return id;
+    public long getAccountId() {
+        return accountId;
     }
+
+
 }

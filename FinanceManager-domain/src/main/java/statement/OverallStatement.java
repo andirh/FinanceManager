@@ -1,13 +1,26 @@
 package statement;
 
+import exceptions.InvalidIdException;
 import transaction.Transaction;
 
 import java.util.List;
 
 public class OverallStatement extends Statement{
 
-    public OverallStatement(List<Transaction> transactions) {
-        super(transactions);
+    private final String statementId;
+
+    @Override
+    public String toString() {
+        return super.getAccountId() + "," + statementId;
     }
 
+    public OverallStatement(List<Transaction> transactions, long accountId) throws InvalidIdException {
+        super(transactions, accountId);
+        this.statementId = "O-" + accountId;
+    }
+
+    @Override
+    public String getStatementId() {
+        return statementId;
+    }
 }

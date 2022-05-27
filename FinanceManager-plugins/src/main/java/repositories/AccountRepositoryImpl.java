@@ -27,9 +27,9 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void update(Account account) throws AccountAlreadyExistsException {
-        remove(account);
-        add(account);
+    public void update(Account accountOld, Account accountNew) throws AccountAlreadyExistsException {
+        remove(accountOld);
+        add(accountNew);
     }
 
     @Override

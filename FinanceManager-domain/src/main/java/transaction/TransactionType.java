@@ -16,6 +16,10 @@ public class TransactionType {
             throw new InvalidTransactionTypeException();
         }
     }
+    @Override
+    public String toString(){
+        return (debit ? "debit" : "payment");
+    }
 
     @Override
     public boolean equals(Object o) {

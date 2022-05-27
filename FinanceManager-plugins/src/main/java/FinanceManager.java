@@ -5,6 +5,8 @@ import account.Owner;
 
 import javax.security.auth.login.AccountException;
 import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Objects;
 
 public class FinanceManager {
@@ -15,7 +17,10 @@ public class FinanceManager {
 
     public static void main(String args[]) {
 
-
+        Date date = new Date();
+        SimpleDateFormat DateFor = new SimpleDateFormat("dd/MM/yyyy");
+        String stringDate= DateFor.format(date);
+        System.out.println(stringDate);
 
     }
 
