@@ -39,6 +39,7 @@ public abstract class Statement {
         if(transactions.size() == 0){
             throw new InvalidStatementException();
         }
+        //TODO Refactoren?
         SortedSet<Transaction> payments = new TreeSet<>(new StatementComparator());
         transactions.forEach(transaction -> {
             if(transaction.getType().isPayment()){
