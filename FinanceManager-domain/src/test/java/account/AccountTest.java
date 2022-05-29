@@ -1,6 +1,5 @@
 package account;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +28,7 @@ class AccountTest {
     }
 
     @Test
-    void decreaseBalanceUnderZero() {
+    void decreaseBalanceBelowZero() {
         account.decreaseBalance(100);
         assertEquals(account.getBalance(), -58);
     }

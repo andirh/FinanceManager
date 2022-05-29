@@ -61,7 +61,34 @@ class StatementTest {
         Transaction[] payments = monthlyStatement.getAllPayments().toArray(new Transaction[0]);
         assertEquals(payments[0], transaction3);
         assertEquals(payments[1], transaction2);
+    }
 
+    @Test
+    void getAllPaymentsThrowsErrorIfNoTransactionsAvailable() throws InvalidIdException, NoPaymentsException {
+        try {
+            List<Transaction> transactions = new ArrayList<>();
+            MonthlyStatement monthlyStatement = new MonthlyStatement(2022, 5, transactions, 1234567890L);
+            Transaction[] payments = monthlyStatement.getAllPayments().toArray(new Transaction[0]);
+            fail("InvalidStatementException did not occur");
+        } catch (InvalidStatementException e) {
+            assertEquals(e.getMessage(), "Invalid Statement");
+        }
+    }
+
+    @Test
+    void getAllPaymentsThrowsErrorIfNoPaymentsAvailable() throws InvalidIdException,  InvalidStatementException {
+        //Nach der Exception testen
+        try {
+            List<Transaction> transactions = new ArrayList<>();
+            TransactionType debit = mock(TransactionType.class);
+            when(debit.isDebit()).thenReturn(true);
+            transactions.add(mockTransaction("Weinfest Besuch", 200.0, "2022/05/26", debit));
+            MonthlyStatement monthlyStatement = new MonthlyStatement(2022, 5, transactions, 1234567890L);
+            Transaction[] payments = monthlyStatement.getAllPayments().toArray(new Transaction[0]);
+            fail("NoPaymentsException did not occur");
+        } catch (NoPaymentsException e) {
+            assertEquals(e.getMessage(), "No payments could be found");
+        }
     }
 
     @Test

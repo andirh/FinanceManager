@@ -16,6 +16,7 @@ public class TransactionBuilder {
 
 
     public Transaction build() throws InvalidAmountException {
+        //Default als ---?
         this.category = Objects.requireNonNullElse(category, "---");
             SimpleDateFormat DateFor = new SimpleDateFormat("yyyy/MM/dd");
         if (date == null){

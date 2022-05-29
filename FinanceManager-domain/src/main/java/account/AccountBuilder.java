@@ -10,6 +10,7 @@ public class AccountBuilder {
     private Owner owner;
 
     public Account build() throws InvalidIdException {
+        //Hier auch Id generierung?
         if(!(id > 1000000000L && id < 9999999999L)){
             throw new InvalidIdException();
         }
