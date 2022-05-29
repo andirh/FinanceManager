@@ -77,7 +77,6 @@ class StatementTest {
 
     @Test
     void getAllPaymentsThrowsErrorIfNoPaymentsAvailable() throws InvalidIdException,  InvalidStatementException {
-        //Nach der Exception testen
         try {
             List<Transaction> transactions = new ArrayList<>();
             TransactionType debit = mock(TransactionType.class);

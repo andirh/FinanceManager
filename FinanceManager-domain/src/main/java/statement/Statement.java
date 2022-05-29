@@ -19,7 +19,6 @@ public abstract class Statement {
     public abstract String getStatementId();
 
     public Statement(List<Transaction> transactions, long accountId) throws InvalidIdException {
-        //Id generierung über Random Objekt anpassen? --> nicht relevant
         if(!(accountId > 1000000000L && accountId < 9999999999L)){
             throw new InvalidIdException();
         }
@@ -39,7 +38,6 @@ public abstract class Statement {
         if(transactions.size() == 0){
             throw new InvalidStatementException();
         }
-        //TODO Refactoren?
         SortedSet<Transaction> payments = new TreeSet<>(new StatementComparator());
         transactions.forEach(transaction -> {
             if(transaction.getType().isPayment()){
