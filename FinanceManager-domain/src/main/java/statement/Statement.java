@@ -1,11 +1,9 @@
 package statement;
 
 import comparators.StatementComparator;
-import exceptions.InvalidIdException;
-import exceptions.InvalidStatementException;
-import exceptions.NoDebitsException;
-import exceptions.NoPaymentsException;
+import exceptions.*;
 import transaction.Transaction;
+import transaction.TransactionType;
 
 import java.util.*;
 
@@ -19,7 +17,7 @@ public abstract class Statement {
     public abstract String getStatementId();
 
     public Statement(List<Transaction> transactions, long accountId) throws InvalidIdException {
-        if(!(accountId > 1000000000L && accountId < 9999999999L)){
+        if (!(accountId > 1000000000L && accountId < 9999999999L)) {
             throw new InvalidIdException();
         }
         this.accountId = accountId;
@@ -28,48 +26,58 @@ public abstract class Statement {
     }
 
     public SortedSet<Transaction> getAllTransactions() throws InvalidStatementException {
-        if(transactions.size() == 0){
+        if (transactions.size() == 0) {
             throw new InvalidStatementException();
         }
         return transactions;
     }
 
     public SortedSet<Transaction> getAllPayments() throws InvalidStatementException, NoPaymentsException {
-        if(transactions.size() == 0){
+        if (transactions.size() == 0) {
             throw new InvalidStatementException();
         }
-        SortedSet<Transaction> payments = new TreeSet<>(new StatementComparator());
-        transactions.forEach(transaction -> {
-            if(transaction.getType().isPayment()){
-                payments.add(transaction);
+        try {
+            SortedSet<Transaction> payments = extractTransactionsByType(new TransactionType(false, true));
+            if (payments.size() == 0) {
+                throw new NoPaymentsException();
+            } else {
+                return payments;
             }
-        });
-        if (payments.size() == 0){
-            throw new NoPaymentsException();
-        } else {
-            return payments;
+        } catch (InvalidTransactionTypeException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
     public SortedSet<Transaction> getAllDebits() throws InvalidStatementException, NoDebitsException {
-        if(transactions.size() == 0){
+        if (transactions.size() == 0) {
             throw new InvalidStatementException();
         }
-        SortedSet<Transaction> debits = new TreeSet<>(new StatementComparator());
-        transactions.forEach(transaction -> {
-            if(transaction.getType().isDebit()){
-                debits.add(transaction);
+        try {
+            SortedSet<Transaction> debits = extractTransactionsByType(new TransactionType(true, false));
+            if (debits.size() == 0) {
+                throw new NoDebitsException();
+            } else {
+                return debits;
             }
-        });
-        if (debits.size() == 0){
-            throw new NoDebitsException();
-        } else {
-            return debits;
+        } catch (InvalidTransactionTypeException e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
+    private SortedSet<Transaction> extractTransactionsByType(TransactionType transactionType) {
+        SortedSet<Transaction> transactionsByType = new TreeSet<>(new StatementComparator());
+        transactions.forEach(transaction -> {
+            if (transaction.getType().equals(transactionType)) {
+                transactionsByType.add(transaction);
+            }
+        });
+        return transactionsByType;
+    }
 
-    public void addTransaction(Transaction transaction){
+
+    public void addTransaction(Transaction transaction) {
         transactions.add(transaction);
     }
 
