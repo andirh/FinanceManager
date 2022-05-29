@@ -2,10 +2,7 @@ package repositories;
 
 import account.Account;
 import account.AccountRepository;
-import exceptions.AccountAlreadyExistsException;
-import exceptions.AccountNotFoundException;
-import exceptions.InvalidAccountException;
-import exceptions.InvalidIdException;
+import exceptions.*;
 import mapping.AccountDataMapper;
 import persistency.account.AccountFileManager;
 
@@ -33,12 +30,12 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public List<Account> list() throws InvalidAccountException, InvalidIdException {
+    public List<Account> list() throws InvalidAccountException, InvalidIdException, NoAccountFilesException {
         return dataMapper.extractAccounts(accountFileManager.getAccountDataFromFile());
     }
 
     @Override
-    public Account getAccountById(long id) throws AccountNotFoundException {
+    public Account getAccountById(long id) throws AccountNotFoundException, NoAccountFilesException {
         try {
             List<Account> accounts = dataMapper.extractAccounts(accountFileManager.getAccountDataFromFile());
             for (Account account : accounts) {
@@ -53,7 +50,7 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public Account getAccountByName(String accountName) throws AccountNotFoundException {
+    public Account getAccountByName(String accountName) throws AccountNotFoundException, NoAccountFilesException {
         try {
             List<Account> accounts = dataMapper.extractAccounts(accountFileManager.getAccountDataFromFile());
             for (Account account : accounts) {

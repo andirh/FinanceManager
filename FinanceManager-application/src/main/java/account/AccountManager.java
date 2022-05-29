@@ -3,6 +3,7 @@ package account;
 
 import exceptions.AccountAlreadyExistsException;
 import exceptions.AccountNotFoundException;
+import exceptions.NoAccountFilesException;
 import transaction.Transaction;
 
 
@@ -15,11 +16,11 @@ public class AccountManager {
         this.accountRepository = accountRepository;
     }
 
-    public Account loadAccountByName(String accountName) throws AccountNotFoundException {
+    public Account loadAccountByName(String accountName) throws AccountNotFoundException, NoAccountFilesException {
         return accountRepository.getAccountByName(accountName);
     }
 
-    public Account loadAccountById(long id) throws AccountNotFoundException {
+    public Account loadAccountById(long id) throws AccountNotFoundException, NoAccountFilesException {
         return accountRepository.getAccountById(id);
     }
 
@@ -37,6 +38,17 @@ public class AccountManager {
         } else {
             account.increaseBalance(transaction.getAmount());
         }
+    }
+
+    public Account loadAccount(String accountName, String accountId) throws NoAccountFilesException, AccountNotFoundException {
+        if(accountName!=null){
+            return loadAccountByName(accountName);
+        }
+        if (accountId!=null){
+            long accountLong = Long.parseLong(accountId);
+            return loadAccountById(accountLong);
+        }
+        return null;
     }
 
 

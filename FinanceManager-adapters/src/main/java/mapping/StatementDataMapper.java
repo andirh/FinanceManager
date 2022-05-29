@@ -46,7 +46,7 @@ public class StatementDataMapper {
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(statement.toString());
         for (Transaction transaction: statement.getAllTransactions()) {
-            stringBuilder.append(transaction.getDate()).append(",").append(transaction.getAmount()).append(",").append(transaction.getCategory()).append(",").append(transaction.getType().toString());
+            stringBuilder.append(System.lineSeparator()).append(transaction.getDate()).append(",").append(transaction.getAmount()).append(",").append(transaction.getCategory()).append(",").append(transaction.getType().toString());
         }
         return stringBuilder.toString();
     }

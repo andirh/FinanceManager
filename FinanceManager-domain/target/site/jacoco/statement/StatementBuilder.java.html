@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StatementBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">FinanceManager-domain</a> &gt; <a href="index.source.html" class="el_package">statement</a> &gt; <span class="el_source">StatementBuilder.java</span></div><h1>StatementBuilder.java</h1><pre class="source lang-java linenums">package statement;
+
+import account.Account;
+import account.AccountBuilder;
+import account.Owner;
+import exceptions.IllegalDateException;
+import exceptions.InvalidIdException;
+import transaction.Transaction;
+
+import java.time.Year;
+import java.util.List;
+
+<span class="nc" id="L13">public class StatementBuilder {</span>
+
+    private List&lt;Transaction&gt; transactions;
+    private long accountId;
+    private int year;
+    private int month;
+
+    public Statement build() throws InvalidIdException, IllegalDateException {
+<span class="nc bnc" id="L21" title="All 6 branches missed.">        if(year &gt; Year.now().getValue() || month &lt; 0 || month &gt; 12 ){</span>
+<span class="nc" id="L22">            throw new IllegalDateException();</span>
+        }
+<span class="nc bnc" id="L24" title="All 4 branches missed.">        if(year == 0 &amp;&amp; month == 0){</span>
+<span class="nc" id="L25">            return new OverallStatement(transactions, accountId);</span>
+<span class="nc bnc" id="L26" title="All 2 branches missed.">        } else if(month == 0){</span>
+<span class="nc" id="L27">            return new YearlyStatement(year, transactions, accountId);</span>
+        } else {
+<span class="nc" id="L29">            return new MonthlyStatement(year, month, transactions, accountId);</span>
+        }
+    }
+
+    public StatementBuilder transactions(List&lt;Transaction&gt; transactions){
+<span class="nc" id="L34">        this.transactions = transactions;</span>
+<span class="nc" id="L35">        return this;</span>
+    }
+
+    public StatementBuilder accountId(long accountId){
+<span class="nc" id="L39">        this.accountId = accountId;</span>
+<span class="nc" id="L40">        return this;</span>
+    }
+
+    public StatementBuilder year(int year){
+<span class="nc" id="L44">        this.year = year;</span>
+<span class="nc" id="L45">        return this;</span>
+    }
+
+    public StatementBuilder month(int month){
+<span class="nc" id="L49">        this.month = month;</span>
+<span class="nc" id="L50">        return this;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

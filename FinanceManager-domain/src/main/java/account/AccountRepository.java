@@ -1,9 +1,6 @@
 package account;
 
-import exceptions.AccountAlreadyExistsException;
-import exceptions.AccountNotFoundException;
-import exceptions.InvalidAccountException;
-import exceptions.InvalidIdException;
+import exceptions.*;
 
 import java.util.List;
 
@@ -15,10 +12,10 @@ public interface AccountRepository {
 
     void update(Account accountOld, Account accountNew) throws AccountAlreadyExistsException;
 
-    List<Account> list() throws InvalidAccountException, InvalidIdException;
+    List<Account> list() throws InvalidAccountException, InvalidIdException, NoAccountFilesException;
 
-    Account getAccountById(long id) throws AccountNotFoundException;
+    Account getAccountById(long id) throws AccountNotFoundException, NoAccountFilesException;
 
-    Account getAccountByName(String accountName) throws  AccountNotFoundException;
+    Account getAccountByName(String accountName) throws AccountNotFoundException, NoAccountFilesException;
 
 }

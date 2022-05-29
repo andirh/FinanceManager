@@ -2,6 +2,7 @@ package persistency.account;
 
 import exceptions.AccountAlreadyExistsException;
 import exceptions.InvalidAccountException;
+import exceptions.NoAccountFilesException;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -10,10 +11,17 @@ import java.util.Objects;
 
 public class AccountFileManager {
 
-    public List<String[]> getAccountDataFromFile() throws InvalidAccountException {
-        File files = new File("src/resources/account-repository");
+    public List<String[]> getAccountDataFromFile() throws InvalidAccountException, NoAccountFilesException {
+        File files = new File("FinanceManager-plugins/src/main/resources/account-repository");
         List<String[]> accountFiles = new ArrayList<>();
-        for (File file : Objects.requireNonNull(files.listFiles())) {
+        try {
+            if (files.listFiles().length == 0) {
+                throw new NoAccountFilesException();
+            }
+        } catch (NullPointerException e) {
+            throw new NoAccountFilesException();
+        }
+        for (File file : files.listFiles()) {
             if (file.getName().endsWith(".csv")) {
                 try {
                     BufferedReader reader = new BufferedReader(new java.io.FileReader(file));
@@ -31,29 +39,38 @@ public class AccountFileManager {
     }
 
     public void createAccountFile(String accountData) throws AccountAlreadyExistsException {
-        File files = new File("src/resources/account-repository");
+        File files = new File("FinanceManager-plugins/src/main/resources/account-repository");
         String accountName = accountData.split(",")[0];
-        File[] fileList = Objects.requireNonNull(files.listFiles());
-        for (File file: fileList) {
-            if (file.getName().equals(accountName + ".csv")){
-                throw new AccountAlreadyExistsException();
-            }
-        }
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(accountName+".csv"));
+            File[] fileList = Objects.requireNonNull(files.listFiles());
+            for (File file : fileList) {
+                if (file.getName().equals(accountName + ".csv")) {
+                    throw new AccountAlreadyExistsException();
+                }
+            }
+            writeAccountData(accountData, files, accountName);
+        } catch (NullPointerException ex) {
+            writeAccountData(accountData, files, accountName);
+        }
+    }
+
+    private void writeAccountData(String accountData, File files, String accountName) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(files.getPath() + "/" + accountName + ".csv"));
             writer.write(accountData);
+            writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void removeAccountFile(String accountName){
-        File files = new File("src/resources/account-repository");
+    public void removeAccountFile(String accountName) {
+        File files = new File("FinanceManager-plugins/src/main/resources/account-repository");
         File[] fileList = Objects.requireNonNull(files.listFiles());
-        for (File file: fileList) {
-            if (file.getName().equals(accountName + ".csv")){
-               file.delete();
-               break;
+        for (File file : fileList) {
+            if (file.getName().equals(accountName + ".csv")) {
+                file.delete();
+                break;
             }
         }
     }

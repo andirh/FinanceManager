@@ -13,9 +13,9 @@ public interface StatementRepository {
 
     void update(Statement statement) throws InvalidStatementException, StatementAlreadyExistsException;
 
-    List<Statement> list(long accountId) throws InvalidStatementException;
+    List<Statement> list(long accountId) throws InvalidStatementException, NoStatementFoundException;
 
-    List<MonthlyStatement> getMonthlyStatements(long accountId) throws  InvalidStatementException;
+    List<MonthlyStatement> getMonthlyStatements(long accountId) throws InvalidStatementException, NoStatementFoundException;
 
     List<YearlyStatement> getYearlyStatements(long accountId) throws NoStatementFoundException, InvalidStatementException;
 

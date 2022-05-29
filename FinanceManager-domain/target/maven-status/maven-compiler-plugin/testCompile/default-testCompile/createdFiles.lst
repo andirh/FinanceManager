@@ -1,0 +1,4 @@
+account\AccountTest.class
+transaction\TransactionTest.class
+statement\StatementTest.class
+comparators\StatementComparatorTest.class

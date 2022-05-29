@@ -1,26 +1,22 @@
 
-
-import account.AccountManager;
-import account.Owner;
-
-import javax.security.auth.login.AccountException;
-import java.io.File;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Objects;
+import account.AccountRepository;
+import application.ApplicationManager;
+import gui.AccountSelection;
+import repositories.AccountRepositoryImpl;
+import repositories.StatementRepositoryImpl;
+import statement.StatementRepository;
 
 public class FinanceManager {
-    //TODO: Plugins: Speichern / Laden - Adapters: CSV Objekt erstellen (CSV String) - Application: Abrechnungen generieren, Buchungen durchführen - Domain: Interfaces für repos Account repo transaction repo statement repo
-
-    private static final String NAME = "SPK Giro";
-    private static final Owner OWNER = new Owner("Andreas", "Rheinwalt");
 
     public static void main(String args[]) {
 
-        Date date = new Date();
-        SimpleDateFormat DateFor = new SimpleDateFormat("dd/MM/yyyy");
-        String stringDate= DateFor.format(date);
-        System.out.println(stringDate);
+        AccountRepository accountRepository = new AccountRepositoryImpl();
+        StatementRepository statementRepository = new StatementRepositoryImpl();
+        ApplicationManager applicationManager = new ApplicationManager(statementRepository, accountRepository);
+        applicationManager.init();
+
+        AccountSelection accountSelectionGui = new AccountSelection(applicationManager);
+
 
     }
 

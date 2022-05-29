@@ -14,7 +14,7 @@ public class StatementRepositoryImpl implements StatementRepository {
     private final StatementFileManager statementFileManager = new StatementFileManager();
 
     @Override
-    public void add(Statement statement) throws InvalidStatementException, StatementAlreadyExistsException {
+    public void add(Statement statement) throws InvalidStatementException {
         statementFileManager.createStatementFile(dataMapper.mapStatementToCsvString(statement));
     }
 
@@ -30,16 +30,16 @@ public class StatementRepositoryImpl implements StatementRepository {
     }
 
     @Override
-    public List<Statement> list(long accountId) throws InvalidStatementException {
+    public List<Statement> list(long accountId) throws InvalidStatementException, NoStatementFoundException {
         try {
             return dataMapper.extractStatements(statementFileManager.getStatementDataFromFile(accountId));
-        } catch (IllegalDateException | InvalidIdException | InvalidTransactionTypeException | InvalidAmountException | InvalidStatementException e) {
+        } catch (IllegalDateException | InvalidIdException | InvalidTransactionTypeException | InvalidAmountException | InvalidStatementException  e) {
             throw new InvalidStatementException();
         }
     }
 
     @Override
-    public List<MonthlyStatement> getMonthlyStatements(long accountId) throws  InvalidStatementException{
+    public List<MonthlyStatement> getMonthlyStatements(long accountId) throws InvalidStatementException, NoStatementFoundException {
         List<MonthlyStatement> monthlyStatements = new ArrayList<>();
         List<Statement> statements = list(accountId);
         for (Statement statement: statements) {
@@ -51,7 +51,7 @@ public class StatementRepositoryImpl implements StatementRepository {
     }
 
     @Override
-    public List<YearlyStatement> getYearlyStatements(long accountId) throws InvalidStatementException {
+    public List<YearlyStatement> getYearlyStatements(long accountId) throws InvalidStatementException, NoStatementFoundException {
         List<YearlyStatement> yearlyStatements = new ArrayList<>();
         List<Statement> statements = list(accountId);
         for (Statement statement: statements) {

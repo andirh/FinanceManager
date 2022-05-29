@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>StatementManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">FinanceManager-application</a> &gt; <a href="index.source.html" class="el_package">statement</a> &gt; <span class="el_source">StatementManager.java</span></div><h1>StatementManager.java</h1><pre class="source lang-java linenums">package statement;
+
+import account.Account;
+import exceptions.*;
+import transaction.Transaction;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class StatementManager {
+
+    private StatementRepository statementRepository;
+    private StatementBuilder statementBuilder;
+
+<span class="nc" id="L15">    public StatementManager(StatementRepository statementRepository) {</span>
+<span class="nc" id="L16">        this.statementRepository = statementRepository;</span>
+<span class="nc" id="L17">        this.statementBuilder = new StatementBuilder();</span>
+<span class="nc" id="L18">    }</span>
+
+    public void createMonthlyStatement(long accountId, int year, int month, List&lt;Transaction&gt; transactions) throws InvalidStatementException {
+        try {
+<span class="nc" id="L22">            Statement statement = statementBuilder.transactions(transactions).accountId(accountId).year(year).month(month).build();</span>
+<span class="nc" id="L23">            this.statementRepository.add(statement);</span>
+<span class="nc" id="L24">        } catch (InvalidIdException | IllegalDateException | StatementAlreadyExistsException e) {</span>
+<span class="nc" id="L25">            throw new InvalidStatementException();</span>
+<span class="nc" id="L26">        }</span>
+<span class="nc" id="L27">    }</span>
+
+    public void createYearlyStatement(long accountId, int year, List&lt;Transaction&gt; transactions) throws InvalidStatementException {
+        try {
+<span class="nc" id="L31">            Statement statement = statementBuilder.transactions(transactions).accountId(accountId).year(year).build();</span>
+<span class="nc" id="L32">            this.statementRepository.add(statement);</span>
+<span class="nc" id="L33">        } catch (InvalidIdException | IllegalDateException | StatementAlreadyExistsException e) {</span>
+<span class="nc" id="L34">            throw new InvalidStatementException();</span>
+<span class="nc" id="L35">        }</span>
+<span class="nc" id="L36">    }</span>
+
+    public void createOverallStatement(long accountId, List&lt;Transaction&gt; transactions) throws InvalidStatementException {
+        try {
+<span class="nc" id="L40">            Statement statement = statementBuilder.transactions(transactions).accountId(accountId).build();</span>
+<span class="nc" id="L41">            this.statementRepository.add(statement);</span>
+<span class="nc" id="L42">        } catch (InvalidIdException | IllegalDateException | StatementAlreadyExistsException e) {</span>
+<span class="nc" id="L43">            throw new InvalidStatementException();</span>
+<span class="nc" id="L44">        }</span>
+<span class="nc" id="L45">    }</span>
+
+
+    public void addTransactionToStatements(Account account, Transaction transaction) throws InvalidStatementException, NoStatementFoundException {
+<span class="nc" id="L49">        List&lt;MonthlyStatement&gt; monthlyStatements = statementRepository.getMonthlyStatements(account.getId());</span>
+<span class="nc" id="L50">        String[] transactionDate = transaction.getDate().split(&quot;/&quot;);</span>
+<span class="nc" id="L51">        boolean addedToMonthly = false;</span>
+<span class="nc" id="L52">        boolean addedToYearly = false;</span>
+
+<span class="nc bnc" id="L54" title="All 2 branches missed.">        for (MonthlyStatement statement: monthlyStatements) {</span>
+<span class="nc bnc" id="L55" title="All 4 branches missed.">            if((statement.getYear().getValue() == Integer.parseInt(transactionDate[0])) &amp;&amp; statement.getMonth().getValue() == Integer.parseInt(transactionDate[1])){</span>
+<span class="nc" id="L56">                statement.addTransaction(transaction);</span>
+<span class="nc" id="L57">                addedToMonthly = true;</span>
+            }
+<span class="nc" id="L59">        }</span>
+<span class="nc" id="L60">        List&lt;YearlyStatement&gt; yearlyStatements = statementRepository.getYearlyStatements(account.getId());</span>
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        for (YearlyStatement statement: yearlyStatements) {</span>
+<span class="nc bnc" id="L62" title="All 2 branches missed.">            if(statement.getYear().getValue() == Integer.parseInt(transactionDate[0])){</span>
+<span class="nc" id="L63">                statement.addTransaction(transaction);</span>
+<span class="nc" id="L64">                addedToYearly = true;</span>
+            }
+<span class="nc" id="L66">        }</span>
+        try {
+<span class="nc" id="L68">            OverallStatement overallStatement = statementRepository.getOverallStatement(account.getId());</span>
+<span class="nc" id="L69">            overallStatement.addTransaction(transaction);</span>
+<span class="nc" id="L70">        } catch (NoStatementFoundException ex){</span>
+<span class="nc" id="L71">            List&lt;Transaction&gt; transactions = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L72">            transactions.add(transaction);</span>
+<span class="nc" id="L73">            createOverallStatement(account.getId(), transactions);</span>
+<span class="nc" id="L74">        }</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if(!addedToMonthly){</span>
+<span class="nc" id="L76">            List&lt;Transaction&gt; transactions = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L77">            transactions.add(transaction);</span>
+<span class="nc" id="L78">            createMonthlyStatement(account.getId(),Integer.parseInt(transactionDate[0]), Integer.parseInt(transactionDate[1]), transactions);</span>
+        }
+<span class="nc bnc" id="L80" title="All 2 branches missed.">        if(!addedToYearly){</span>
+<span class="nc" id="L81">            List&lt;Transaction&gt; transactions = new ArrayList&lt;&gt;();</span>
+<span class="nc" id="L82">            transactions.add(transaction);</span>
+<span class="nc" id="L83">            createYearlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), transactions);</span>
+        }
+<span class="nc" id="L85">    }</span>
+
+    public double getSumOfStatement(Statement statement) throws InvalidStatementException {
+<span class="nc" id="L88">        double sum = 0.0;</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        for (Transaction transaction: statement.getAllTransactions()) {</span>
+<span class="nc bnc" id="L90" title="All 2 branches missed.">            if (transaction.getType().isDebit()){</span>
+<span class="nc" id="L91">                sum = sum - transaction.getAmount();</span>
+<span class="nc bnc" id="L92" title="All 2 branches missed.">            } else if(transaction.getType().isPayment()){</span>
+<span class="nc" id="L93">                sum = sum +  transaction.getAmount();</span>
+            }
+<span class="nc" id="L95">        }</span>
+<span class="nc" id="L96">        return sum;</span>
+    }
+
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

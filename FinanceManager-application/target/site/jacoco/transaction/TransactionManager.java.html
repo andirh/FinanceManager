@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="de"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TransactionManager.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">FinanceManager-application</a> &gt; <a href="index.source.html" class="el_package">transaction</a> &gt; <span class="el_source">TransactionManager.java</span></div><h1>TransactionManager.java</h1><pre class="source lang-java linenums">package transaction;
+
+import account.Account;
+import account.AccountManager;
+import exceptions.InvalidAmountException;
+import statement.StatementManager;
+
+public class TransactionManager {
+
+<span class="nc" id="L10">    private TransactionBuilder builder = new TransactionBuilder();</span>
+    private AccountManager accountManager;
+    private StatementManager statementManager;
+
+<span class="nc" id="L14">    public TransactionManager(AccountManager accountManager, StatementManager statementManager) {</span>
+<span class="nc" id="L15">        this.accountManager = accountManager;</span>
+<span class="nc" id="L16">        this.statementManager = statementManager;</span>
+<span class="nc" id="L17">    }</span>
+
+    public Transaction createTransaction(String category, double amount, String date, TransactionType type) throws InvalidAmountException {
+<span class="nc" id="L20">        return builder.date(date).category(category).amount(amount).type(type).build();</span>
+    }
+
+    public Transaction createTransaction(String category, double amount, TransactionType type) throws InvalidAmountException {
+<span class="nc" id="L24">        return builder.category(category).amount(amount).type(type).build();</span>
+    }
+
+    public Transaction executeTransaction(Transaction transaction, Account account){
+        //TODO implement
+<span class="nc" id="L29">        accountManager.executeTransactionOnAccount(account,transaction);</span>
+<span class="nc" id="L30">        return null;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

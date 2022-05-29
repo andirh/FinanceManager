@@ -13,7 +13,7 @@ public class Transaction {
 
 
     public Transaction(String category, double amount, String date, TransactionType type) throws InvalidAmountException {
-        this.category = Objects.requireNonNullElse(category, "");
+        this.category = Objects.requireNonNullElse(category, "---");
         this.amount = amount;
         this.type = type;
         this.date = date;
