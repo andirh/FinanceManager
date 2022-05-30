@@ -31,9 +31,9 @@ public class StatementDataMapper {
                                 : new TransactionType(false, true) ).build();
                 transactions.add(transaction);
             }
-            if(statementMetaData.length == 5){
+            if(statementMetaData.length == 4){
                 statements.add(statementBuilder.accountId(Long.parseLong(statementMetaData[0])).year(Integer.parseInt(statementMetaData[2])).month(Integer.parseInt(statementMetaData[3])).transactions(transactions).build());
-            } else if(statementMetaData.length == 4){
+            } else if(statementMetaData.length == 3){
                 statements.add(statementBuilder.accountId(Long.parseLong(statementMetaData[0])).year(Integer.parseInt(statementMetaData[2])).transactions(transactions).build());
             } else {
                 statements.add(statementBuilder.accountId(Long.parseLong(statementMetaData[0])).transactions(transactions).build());

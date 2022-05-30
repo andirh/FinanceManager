@@ -76,35 +76,9 @@ public class StatementManager {
         boolean monthlyHasBeenAdded = false;
         boolean yearlyHasBeenAdded = false;
         try {
-            try {
-                List<MonthlyStatement> monthlyStatements = statementRepository.getMonthlyStatements(account.getId());
-                for (MonthlyStatement statement : monthlyStatements) {
-                    if ((statement.getYear().getValue() == Integer.parseInt(transactionDate[0])) && statement.getMonth().getValue() == Integer.parseInt(transactionDate[1])) {
-                        statement.addTransaction(transaction);
-                        statementRepository.update(statement, account.getId());
-                        monthlyHasBeenAdded = true;
-                    }
-                }
-            } catch (NoMonthlyStatementsFoundException e) {
-                List<Transaction> transactions = new ArrayList<>();
-                transactions.add(transaction);
-                createMonthlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), Integer.parseInt(transactionDate[1]), transactions);
-            }
+            monthlyHasBeenAdded = tryToAddTransactionToMonthlyStatement(account, transaction, transactionDate, monthlyHasBeenAdded);
 
-            try {
-                List<YearlyStatement> yearlyStatements = statementRepository.getYearlyStatements(account.getId());
-                for (YearlyStatement statement : yearlyStatements) {
-                    if (statement.getYear().getValue() == Integer.parseInt(transactionDate[0])) {
-                        statement.addTransaction(transaction);
-                        statementRepository.update(statement, account.getId());
-                        yearlyHasBeenAdded = true;
-                    }
-                }
-            } catch (NoYearlyStatementsFoundException e) {
-                List<Transaction> transactions = new ArrayList<>();
-                transactions.add(transaction);
-                createYearlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), transactions);
-            }
+            yearlyHasBeenAdded = tryToAddTransactionToYearlyStatement(account, transaction, transactionDate, yearlyHasBeenAdded);
             try {
                 OverallStatement overallStatement = statementRepository.getOverallStatement(account.getId());
                 overallStatement.addTransaction(transaction);
@@ -116,31 +90,79 @@ public class StatementManager {
             }
 
 
-            if (!monthlyHasBeenAdded) {
-                List<Transaction> transactions = new ArrayList<>();
-                transactions.add(transaction);
-                createMonthlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), Integer.parseInt(transactionDate[1]), transactions);
-            }
+            createMonthlyStatementIfDateFrameIsNew(account, transaction, transactionDate, monthlyHasBeenAdded);
 
-            if (!yearlyHasBeenAdded) {
-                List<Transaction> transactions = new ArrayList<>();
-                transactions.add(transaction);
-                createYearlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), transactions);
-            }
+            createYearlyStatementIfDateFrameIsNew(account, transaction, transactionDate, yearlyHasBeenAdded);
 
         } catch (NoStatementFoundException ex) {
+            createInitialStatements(account, transaction, transactionDate);
+        }
+    }
+
+    private boolean tryToAddTransactionToYearlyStatement(Account account, Transaction transaction, String[] transactionDate, boolean yearlyHasBeenAdded) throws NoStatementFoundException, InvalidStatementException, StatementAlreadyExistsException {
+        try {
+            List<YearlyStatement> yearlyStatements = statementRepository.getYearlyStatements(account.getId());
+            for (YearlyStatement statement : yearlyStatements) {
+                if (statement.getYear().getValue() == Integer.parseInt(transactionDate[0])) {
+                    statement.addTransaction(transaction);
+                    statementRepository.update(statement, account.getId());
+                    yearlyHasBeenAdded = true;
+                }
+            }
+        } catch (NoYearlyStatementsFoundException e) {
             List<Transaction> transactions = new ArrayList<>();
             transactions.add(transaction);
-            createOverallStatement(account.getId(), transactions);
-
-            List<Transaction> monthlyTransactions = new ArrayList<>();
-            monthlyTransactions.add(transaction);
-            createMonthlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), Integer.parseInt(transactionDate[1]), monthlyTransactions);
-
-            List<Transaction> yearlyTransactions = new ArrayList<>();
-            yearlyTransactions.add(transaction);
-            createYearlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), yearlyTransactions);
+            createYearlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), transactions);
         }
+        return yearlyHasBeenAdded;
+    }
+
+    private boolean tryToAddTransactionToMonthlyStatement(Account account, Transaction transaction, String[] transactionDate, boolean monthlyHasBeenAdded) throws InvalidStatementException, NoStatementFoundException, StatementAlreadyExistsException {
+        try {
+            List<MonthlyStatement> monthlyStatements = statementRepository.getMonthlyStatements(account.getId());
+            for (MonthlyStatement statement : monthlyStatements) {
+                if ((statement.getYear().getValue() == Integer.parseInt(transactionDate[0])) && statement.getMonth().getValue() == Integer.parseInt(transactionDate[1])) {
+                    statement.addTransaction(transaction);
+                    statementRepository.update(statement, account.getId());
+                    monthlyHasBeenAdded = true;
+                }
+            }
+        } catch (NoMonthlyStatementsFoundException e) {
+            List<Transaction> transactions = new ArrayList<>();
+            transactions.add(transaction);
+            createMonthlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), Integer.parseInt(transactionDate[1]), transactions);
+        }
+        return monthlyHasBeenAdded;
+    }
+
+    private void createYearlyStatementIfDateFrameIsNew(Account account, Transaction transaction, String[] transactionDate, boolean yearlyHasBeenAdded) throws InvalidStatementException {
+        if (!yearlyHasBeenAdded) {
+            List<Transaction> transactions = new ArrayList<>();
+            transactions.add(transaction);
+            createYearlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), transactions);
+        }
+    }
+
+    private void createMonthlyStatementIfDateFrameIsNew(Account account, Transaction transaction, String[] transactionDate, boolean monthlyHasBeenAdded) throws InvalidStatementException {
+        if (!monthlyHasBeenAdded) {
+            List<Transaction> transactions = new ArrayList<>();
+            transactions.add(transaction);
+            createMonthlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), Integer.parseInt(transactionDate[1]), transactions);
+        }
+    }
+
+    private void createInitialStatements(Account account, Transaction transaction, String[] transactionDate) throws InvalidStatementException {
+        List<Transaction> transactions = new ArrayList<>();
+        transactions.add(transaction);
+        createOverallStatement(account.getId(), transactions);
+
+        List<Transaction> monthlyTransactions = new ArrayList<>();
+        monthlyTransactions.add(transaction);
+        createMonthlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), Integer.parseInt(transactionDate[1]), monthlyTransactions);
+
+        List<Transaction> yearlyTransactions = new ArrayList<>();
+        yearlyTransactions.add(transaction);
+        createYearlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), yearlyTransactions);
     }
 
     public double getSumOfStatement(Statement statement) throws InvalidStatementException {

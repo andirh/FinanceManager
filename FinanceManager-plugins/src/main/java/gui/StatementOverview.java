@@ -56,6 +56,7 @@ public class StatementOverview extends JFrame {
                 dispose();
                 new StatementDisplay(applicationManager, account, statement);
             } catch (InvalidStatementException | NoStatementFoundException | NoMonthlyStatementsFoundException | NoYearlyStatementsFoundException | NoOverallStatementFoundException ex) {
+                ex.printStackTrace();
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             }
         });

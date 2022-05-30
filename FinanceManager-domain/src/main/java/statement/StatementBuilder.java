@@ -18,34 +18,38 @@ public class StatementBuilder {
     private int month;
 
     public Statement build() throws InvalidIdException, IllegalDateException {
-        if(year > Year.now().getValue() || month < 0 || month > 12 ){
+        if (year > Year.now().getValue() || month < 0 || month > 12) {
             throw new IllegalDateException();
         }
-        if(year == 0 && month == 0){
-            return new OverallStatement(transactions, accountId);
-        } else if(month == 0){
-            return new YearlyStatement(year, transactions, accountId);
+        Statement statement;
+        if (year == 0 && month == 0) {
+            statement = new OverallStatement(transactions, accountId);
+        } else if (month == 0) {
+            statement = new YearlyStatement(year, transactions, accountId);
         } else {
-            return new MonthlyStatement(year, month, transactions, accountId);
+            statement = new MonthlyStatement(year, month, transactions, accountId);
         }
+        year = 0;
+        month = 0;
+        return statement;
     }
 
-    public StatementBuilder transactions(List<Transaction> transactions){
+    public StatementBuilder transactions(List<Transaction> transactions) {
         this.transactions = transactions;
         return this;
     }
 
-    public StatementBuilder accountId(long accountId){
+    public StatementBuilder accountId(long accountId) {
         this.accountId = accountId;
         return this;
     }
 
-    public StatementBuilder year(int year){
+    public StatementBuilder year(int year) {
         this.year = year;
         return this;
     }
 
-    public StatementBuilder month(int month){
+    public StatementBuilder month(int month) {
         this.month = month;
         return this;
     }
