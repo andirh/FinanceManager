@@ -1,40 +1,25 @@
-import main.domain.account.AccountManager;
-import main.domain.account.Owner;
 
-import javax.security.auth.login.AccountException;
-import java.io.File;
-import java.util.Objects;
+import account.AccountRepository;
+import application.ApplicationManager;
+import gui.AccountSelection;
+import repositories.AccountRepositoryImpl;
+import repositories.StatementRepositoryImpl;
+import statement.StatementRepository;
 
 public class FinanceManager {
 
-    //TODO: Plugins: Speichern / Laden - Adapters: CSV Objekt erstellen (CSV String) - Application: Abrechnungen generieren, Buchungen durchführen - Domain: Interfaces für repos Account repo transaction repo statement repo
+    public static void main(String args[]) {
 
-    private static final String NAME = "SPK Giro";
-    private static final Owner OWNER = new Owner("Andreas", "Rheinwalt");
+        AccountRepository accountRepository = new AccountRepositoryImpl();
+        StatementRepository statementRepository = new StatementRepositoryImpl();
+        ApplicationManager applicationManager = new ApplicationManager(statementRepository, accountRepository);
+        applicationManager.init();
 
-    public static void main(String args[]){
+        new AccountSelection(applicationManager);
 
-        File accountFiles = new File("src/resources/account");
-        AccountManager accountManager = new AccountManager();
-        File accountDetails = null;
-        for (File file : Objects.requireNonNull(accountFiles.listFiles())) {
-            if ((NAME + ".csv").equalsIgnoreCase(file.getName())){
-                accountDetails = file;
-                break;
-            }
-        }
-
-        if (accountDetails != null){
-            try {
-                accountManager.loadExistingAccount(accountDetails);
-            } catch (AccountException e) {
-                accountManager.createAccount(NAME, OWNER);
-            }
-        } else {
-            accountManager.createAccount(NAME, OWNER);
-        }
 
     }
 
 
 }
+

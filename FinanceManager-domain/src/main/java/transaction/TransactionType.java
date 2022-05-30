@@ -1,5 +1,7 @@
 package transaction;
 
+import exceptions.InvalidTransactionTypeException;
+
 import java.util.Objects;
 
 public class TransactionType {
@@ -7,12 +9,16 @@ public class TransactionType {
     final boolean debit;
     final boolean payment;
 
-    public TransactionType(boolean debit, boolean payment) {
+    public TransactionType(boolean debit, boolean payment) throws InvalidTransactionTypeException {
         this.debit = debit;
         this.payment = payment;
         if(this.debit == this.payment){
-            //throw new InvalidTransactionTypeException();
+            throw new InvalidTransactionTypeException();
         }
+    }
+    @Override
+    public String toString(){
+        return (debit ? "debit" : "payment");
     }
 
     @Override

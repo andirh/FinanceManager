@@ -1,29 +1,24 @@
 package account;
 
-import java.util.Random;
+
+import java.util.Objects;
 
 public class Account {
 
-    private int id;
-    private double balance = 0;
-    private String accountName;
-    private Owner owner;
+    private final long id;
+    private double balance = 0.0;
+    private final String accountName;
+    private final Owner owner;
 
-    public Account(String accountName, Owner owner) {
-        this.accountName = accountName;
-        this.owner = owner;
-        Random rnd = new Random();
-        this.id = 10000000 + rnd.nextInt(90000000);
-    }
-
-    public Account(String accountName, Owner owner, double balance, int id) {
+    public Account(String accountName, Owner owner, double balance, long id) {
         this.balance = balance;
         this.accountName = accountName;
         this.owner = owner;
         this.id = id;
     }
 
-    public int getId() {
+
+    public long getId() {
         return id;
     }
 
@@ -47,4 +42,16 @@ public class Account {
         balance -= amount;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return id == account.id;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

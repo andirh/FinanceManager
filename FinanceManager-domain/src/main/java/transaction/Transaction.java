@@ -1,32 +1,25 @@
 package transaction;
 
-import java.util.Date;
+import exceptions.InvalidAmountException;
+
 import java.util.Objects;
 
 public class Transaction {
 
     final String category;
     final double amount;
-    final Date date;
+    final String date;
     final TransactionType type;
 
 
-    public Transaction(String category, double amount, Date date, TransactionType type) {
-        this.category = category;
+    public Transaction(String category, double amount, String date, TransactionType type) throws InvalidAmountException {
+        this.category = Objects.requireNonNullElse(category, "---");
         this.amount = amount;
+        this.type = type;
         this.date = date;
-        this.type = type;
-        if(category == null)
-            category = "";
-    }
-
-    public Transaction(String category, double amount, TransactionType type) {
-        this.category = Objects.requireNonNullElse(category, "");
-        this.amount = amount;
-        this.type = type;
-        date = new Date();
-        if (this.amount == 0.0)
-            //throw new IllegalAmountException();
+        if (this.amount <= 0.0) {
+            throw new InvalidAmountException();
+        }
     }
 
     @Override
@@ -40,5 +33,21 @@ public class Transaction {
     @Override
     public int hashCode() {
         return Objects.hash(category, amount, date, type);
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public double getAmount() {
+        return amount;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public TransactionType getType() {
+        return type;
     }
 }
