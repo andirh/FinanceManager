@@ -10,7 +10,7 @@ public interface AccountRepository {
 
     void remove(Account account);
 
-    void update(Account accountOld, Account accountNew) throws AccountAlreadyExistsException;
+    void update(Account account) throws AccountAlreadyExistsException;
 
     List<Account> list() throws InvalidAccountException, InvalidIdException, NoAccountFilesException;
 

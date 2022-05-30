@@ -44,11 +44,11 @@ public class StatementManager {
         }
     }
 
-    public MonthlyStatement getMonthlyStatement(int year, int month, Account account) throws InvalidStatementException, NoStatementFoundException {
+    public MonthlyStatement getMonthlyStatement(int year, int month, Account account) throws InvalidStatementException, NoStatementFoundException, NoMonthlyStatementsFoundException {
         List<MonthlyStatement> monthlyStatements = statementRepository.getMonthlyStatements(account.getId());
-        for (MonthlyStatement monthlyStatement: monthlyStatements) {
-            if (monthlyStatement.getYear().getValue() == year){
-                if (monthlyStatement.getMonth().getValue() == month){
+        for (MonthlyStatement monthlyStatement : monthlyStatements) {
+            if (monthlyStatement.getYear().getValue() == year) {
+                if (monthlyStatement.getMonth().getValue() == month) {
                     return monthlyStatement;
                 }
             }
@@ -56,39 +56,78 @@ public class StatementManager {
         throw new NoStatementFoundException();
     }
 
-    public YearlyStatement getYearlyStatement(int year, Account account) throws InvalidStatementException, NoStatementFoundException {
+    public YearlyStatement getYearlyStatement(int year, Account account) throws InvalidStatementException, NoStatementFoundException, NoYearlyStatementsFoundException {
         List<YearlyStatement> yearlyStatements = statementRepository.getYearlyStatements(account.getId());
-        for (YearlyStatement yearlyStatement: yearlyStatements) {
-            if (yearlyStatement.getYear().getValue() == year){
+        for (YearlyStatement yearlyStatement : yearlyStatements) {
+            if (yearlyStatement.getYear().getValue() == year) {
                 return yearlyStatement;
             }
         }
         throw new NoStatementFoundException();
     }
 
-    public OverallStatement getOverallStatement(Account account) throws InvalidStatementException, NoStatementFoundException {
+    public OverallStatement getOverallStatement(Account account) throws InvalidStatementException, NoStatementFoundException, NoOverallStatementFoundException {
         return statementRepository.getOverallStatement(account.getId());
     }
 
 
-    public void addTransactionToStatements(Account account, Transaction transaction) throws InvalidStatementException, NoStatementFoundException {
+    public void addTransactionToStatements(Account account, Transaction transaction) throws InvalidStatementException, StatementAlreadyExistsException {
         String[] transactionDate = transaction.getDate().split("/");
+        boolean monthlyHasBeenAdded = false;
+        boolean yearlyHasBeenAdded = false;
         try {
-            List<MonthlyStatement> monthlyStatements = statementRepository.getMonthlyStatements(account.getId());
-            List<YearlyStatement> yearlyStatements = statementRepository.getYearlyStatements(account.getId());
-            OverallStatement overallStatement = statementRepository.getOverallStatement(account.getId());
-            overallStatement.addTransaction(transaction);
+            try {
+                List<MonthlyStatement> monthlyStatements = statementRepository.getMonthlyStatements(account.getId());
+                for (MonthlyStatement statement : monthlyStatements) {
+                    if ((statement.getYear().getValue() == Integer.parseInt(transactionDate[0])) && statement.getMonth().getValue() == Integer.parseInt(transactionDate[1])) {
+                        statement.addTransaction(transaction);
+                        statementRepository.update(statement, account.getId());
+                        monthlyHasBeenAdded = true;
+                    }
+                }
+            } catch (NoMonthlyStatementsFoundException e) {
+                List<Transaction> transactions = new ArrayList<>();
+                transactions.add(transaction);
+                createMonthlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), Integer.parseInt(transactionDate[1]), transactions);
+            }
 
-            for (MonthlyStatement statement : monthlyStatements) {
-                if ((statement.getYear().getValue() == Integer.parseInt(transactionDate[0])) && statement.getMonth().getValue() == Integer.parseInt(transactionDate[1])) {
-                    statement.addTransaction(transaction);
+            try {
+                List<YearlyStatement> yearlyStatements = statementRepository.getYearlyStatements(account.getId());
+                for (YearlyStatement statement : yearlyStatements) {
+                    if (statement.getYear().getValue() == Integer.parseInt(transactionDate[0])) {
+                        statement.addTransaction(transaction);
+                        statementRepository.update(statement, account.getId());
+                        yearlyHasBeenAdded = true;
+                    }
                 }
+            } catch (NoYearlyStatementsFoundException e) {
+                List<Transaction> transactions = new ArrayList<>();
+                transactions.add(transaction);
+                createYearlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), transactions);
             }
-            for (YearlyStatement statement : yearlyStatements) {
-                if (statement.getYear().getValue() == Integer.parseInt(transactionDate[0])) {
-                    statement.addTransaction(transaction);
-                }
+            try {
+                OverallStatement overallStatement = statementRepository.getOverallStatement(account.getId());
+                overallStatement.addTransaction(transaction);
+                statementRepository.update(overallStatement, account.getId());
+            } catch (NoOverallStatementFoundException e) {
+                List<Transaction> transactions = new ArrayList<>();
+                transactions.add(transaction);
+                createOverallStatement(account.getId(), transactions);
             }
+
+
+            if (!monthlyHasBeenAdded) {
+                List<Transaction> transactions = new ArrayList<>();
+                transactions.add(transaction);
+                createMonthlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), Integer.parseInt(transactionDate[1]), transactions);
+            }
+
+            if (!yearlyHasBeenAdded) {
+                List<Transaction> transactions = new ArrayList<>();
+                transactions.add(transaction);
+                createYearlyStatement(account.getId(), Integer.parseInt(transactionDate[0]), transactions);
+            }
+
         } catch (NoStatementFoundException ex) {
             List<Transaction> transactions = new ArrayList<>();
             transactions.add(transaction);

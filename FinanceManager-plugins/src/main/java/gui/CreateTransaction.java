@@ -5,10 +5,7 @@ import application.ApplicationManager;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import exceptions.InvalidAmountException;
-import exceptions.InvalidStatementException;
-import exceptions.InvalidTransactionTypeException;
-import exceptions.NoStatementFoundException;
+import exceptions.*;
 import transaction.Transaction;
 import transaction.TransactionType;
 
@@ -63,7 +60,7 @@ public class CreateTransaction extends JFrame {
                 applicationManager.getTransactionManager().executeTransaction(transaction, account);
                 dispose();
                 new AccountOverview(applicationManager, account);
-            } catch (InvalidTransactionTypeException | InvalidAmountException | NoStatementFoundException | InvalidStatementException ex) {
+            } catch (StatementAlreadyExistsException | InvalidIdException | InvalidTransactionTypeException | InvalidAmountException | NoStatementFoundException | InvalidStatementException | AccountAlreadyExistsException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage());
             }
         });

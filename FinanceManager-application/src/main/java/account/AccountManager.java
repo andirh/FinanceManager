@@ -28,16 +28,17 @@ public class AccountManager {
         accountRepository.add(account);
     }
 
-    public void updateAccount(Account accountOld, Account accountNew) throws AccountAlreadyExistsException {
-        this.accountRepository.update(accountOld, accountNew);
+    public void updateAccount(Account account) throws AccountAlreadyExistsException {
+        this.accountRepository.update(account);
     }
 
-    public void executeTransactionOnAccount(Account account, Transaction transaction){
+    public void executeTransactionOnAccount(Account account, Transaction transaction) throws AccountAlreadyExistsException {
         if (transaction.getType().isDebit()){
             account.decreaseBalance(transaction.getAmount());
         } else {
             account.increaseBalance(transaction.getAmount());
         }
+        accountRepository.update(account);
     }
 
     public Account loadAccount(String accountName, String accountId) throws NoAccountFilesException, AccountNotFoundException {

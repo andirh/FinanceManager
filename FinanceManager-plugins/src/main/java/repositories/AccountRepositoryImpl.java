@@ -24,9 +24,8 @@ public class AccountRepositoryImpl implements AccountRepository {
     }
 
     @Override
-    public void update(Account accountOld, Account accountNew) throws AccountAlreadyExistsException {
-        remove(accountOld);
-        add(accountNew);
+    public void update(Account account) throws AccountAlreadyExistsException {
+        accountFileManager.updateBalance(dataMapper.mapAccountToCsvString(account));
     }
 
     @Override

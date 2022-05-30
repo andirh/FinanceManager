@@ -54,6 +54,21 @@ public class AccountFileManager {
         }
     }
 
+    public void updateBalance(String accountData){
+        File files = new File("FinanceManager-plugins/src/main/resources/account-repository");
+        String[] accountDetails = accountData.split(",");
+        try {
+            File[] fileList = Objects.requireNonNull(files.listFiles());
+            for (File file : fileList) {
+                if (file.getName().equals(accountDetails[0] + ".csv")) {
+                    writeAccountData(accountData,files,accountDetails[0]);
+                }
+            }
+        } catch (NullPointerException ex) {
+            ex.printStackTrace();
+        }
+    }
+
     private void writeAccountData(String accountData, File files, String accountName) {
         try {
             BufferedWriter writer = new BufferedWriter(new FileWriter(files.getPath() + "/" + accountName + ".csv"));

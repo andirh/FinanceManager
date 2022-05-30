@@ -21,9 +21,9 @@ public class StatementDataMapper {
         for (String[] statementLinesArray : statementData) {
             List<String> statementLines = Arrays.asList(statementLinesArray);
             String[] statementMetaData = statementLines.get(0).split(",");
-            statementLines.remove(0);
             List<Transaction> transactions = new ArrayList<>();
-            for (String transactionString: statementLines) {
+            for (int i = 1; i < statementLines.size(); i++) {
+                String transactionString = statementLines.get(i);
                 String[] transactionInformation = transactionString.split(",");
                 Transaction transaction = transactionBuilder.date(transactionInformation[0]).amount(Double.parseDouble(transactionInformation[1]))
                         .category(transactionInformation[2])
@@ -44,9 +44,9 @@ public class StatementDataMapper {
 
     public String mapStatementToCsvString(Statement statement) throws InvalidStatementException {
         StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append(statement.toString());
+        stringBuilder.append(statement.toString()+ System.lineSeparator());
         for (Transaction transaction: statement.getAllTransactions()) {
-            stringBuilder.append(System.lineSeparator()).append(transaction.getDate()).append(",").append(transaction.getAmount()).append(",").append(transaction.getCategory()).append(",").append(transaction.getType().toString());
+            stringBuilder.append(transaction.getDate()).append(",").append(transaction.getAmount()).append(",").append(transaction.getCategory()).append(",").append(transaction.getType().toString()).append(System.lineSeparator());
         }
         return stringBuilder.toString();
     }

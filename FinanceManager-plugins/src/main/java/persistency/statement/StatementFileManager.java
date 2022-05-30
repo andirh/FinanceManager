@@ -26,11 +26,14 @@ public class StatementFileManager {
             if (file.getName().endsWith(".csv")) {
                 try {
                     BufferedReader reader = new BufferedReader(new java.io.FileReader(file));
-                    String[] statementDetails = reader.readLine().split("\\r?\\n");
-                    if (statementDetails.length < 2) {
+                    List<String> statementContent = new ArrayList<>();
+                    for (String line; (line = reader.readLine()) != null;) {
+                        statementContent.add(line);
+                    }
+                    if (statementContent.get(0).split(",").length < 2) {
                         throw new InvalidStatementException();
                     }
-                    statementFiles.add(statementDetails);
+                    statementFiles.add(statementContent.toArray(new String[0]));
                 } catch (IOException | NullPointerException e) {
                     throw new InvalidStatementException();
                 }
@@ -38,6 +41,7 @@ public class StatementFileManager {
         }
         return statementFiles;
     }
+
 
     public void createStatementFile(String statementData) {
         String[] statementMetadata = statementData.split(System.lineSeparator())[0].split(",");

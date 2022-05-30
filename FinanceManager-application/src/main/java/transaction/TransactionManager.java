@@ -2,9 +2,7 @@ package transaction;
 
 import account.Account;
 import account.AccountManager;
-import exceptions.InvalidAmountException;
-import exceptions.InvalidStatementException;
-import exceptions.NoStatementFoundException;
+import exceptions.*;
 import statement.StatementManager;
 
 public class TransactionManager {
@@ -26,7 +24,7 @@ public class TransactionManager {
         return builder.category(category).amount(amount).type(type).build();
     }
 
-    public void executeTransaction(Transaction transaction, Account account) throws InvalidStatementException, NoStatementFoundException {
+    public void executeTransaction(Transaction transaction, Account account) throws InvalidStatementException, NoStatementFoundException, StatementAlreadyExistsException, InvalidIdException, AccountAlreadyExistsException {
         accountManager.executeTransactionOnAccount(account,transaction);
         statementManager.addTransactionToStatements(account, transaction);
     }
