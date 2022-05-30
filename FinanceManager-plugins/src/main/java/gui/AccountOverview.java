@@ -50,6 +50,11 @@ public class AccountOverview extends JFrame {
             dispose();
         });
 
+        viewStatementsButton.addActionListener(e -> {
+            new StatementOverview(applicationManager, account);
+            dispose();
+        });
+
     }
 
     {

@@ -44,6 +44,32 @@ public class StatementManager {
         }
     }
 
+    public MonthlyStatement getMonthlyStatement(int year, int month, Account account) throws InvalidStatementException, NoStatementFoundException {
+        List<MonthlyStatement> monthlyStatements = statementRepository.getMonthlyStatements(account.getId());
+        for (MonthlyStatement monthlyStatement: monthlyStatements) {
+            if (monthlyStatement.getYear().getValue() == year){
+                if (monthlyStatement.getMonth().getValue() == month){
+                    return monthlyStatement;
+                }
+            }
+        }
+        throw new NoStatementFoundException();
+    }
+
+    public YearlyStatement getYearlyStatement(int year, Account account) throws InvalidStatementException, NoStatementFoundException {
+        List<YearlyStatement> yearlyStatements = statementRepository.getYearlyStatements(account.getId());
+        for (YearlyStatement yearlyStatement: yearlyStatements) {
+            if (yearlyStatement.getYear().getValue() == year){
+                return yearlyStatement;
+            }
+        }
+        throw new NoStatementFoundException();
+    }
+
+    public OverallStatement getOverallStatement(Account account) throws InvalidStatementException, NoStatementFoundException {
+        return statementRepository.getOverallStatement(account.getId());
+    }
+
 
     public void addTransactionToStatements(Account account, Transaction transaction) throws InvalidStatementException, NoStatementFoundException {
         String[] transactionDate = transaction.getDate().split("/");

@@ -41,6 +41,7 @@ public class CreateTransaction extends JFrame {
 
         cancelButton.addActionListener(e -> {
             dispose();
+            new AccountOverview(applicationManager, account);
         });
 
         createButton.addActionListener(e -> {
