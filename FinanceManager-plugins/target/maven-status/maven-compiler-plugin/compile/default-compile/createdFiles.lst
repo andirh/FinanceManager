@@ -1,6 +1,0 @@
-persistency\account\AccountFileManager.class
-repositories\AccountRepositoryImpl.class
-repositories\StatementRepositoryImpl.class
-persistency\statement\StatementFileManager.class
-FinanceManager.class
-gui\AccountSelection.class

@@ -3,8 +3,6 @@ package statement;
 import comparators.StatementComparator;
 import exceptions.*;
 import transaction.Transaction;
-import transaction.TransactionType;
-
 import java.util.*;
 
 public abstract class Statement {
@@ -36,16 +34,11 @@ public abstract class Statement {
         if (transactions.size() == 0) {
             throw new InvalidStatementException();
         }
-        try {
-            SortedSet<Transaction> payments = extractTransactionsByType(new TransactionType(false, true));
-            if (payments.size() == 0) {
-                throw new NoPaymentsException();
-            } else {
-                return payments;
-            }
-        } catch (InvalidTransactionTypeException e) {
-            e.printStackTrace();
-            return null;
+        SortedSet<Transaction> payments = extractTransactionsByType(0);
+        if (payments.size() == 0) {
+            throw new NoPaymentsException();
+        } else {
+            return payments;
         }
     }
 
@@ -53,26 +46,29 @@ public abstract class Statement {
         if (transactions.size() == 0) {
             throw new InvalidStatementException();
         }
-        try {
-            SortedSet<Transaction> debits = extractTransactionsByType(new TransactionType(true, false));
-            if (debits.size() == 0) {
-                throw new NoDebitsException();
-            } else {
-                return debits;
-            }
-        } catch (InvalidTransactionTypeException e) {
-            e.printStackTrace();
-            return null;
+        SortedSet<Transaction> debits = extractTransactionsByType(1);
+        if (debits.size() == 0) {
+            throw new NoDebitsException();
+        } else {
+            return debits;
         }
     }
 
-    private SortedSet<Transaction> extractTransactionsByType(TransactionType transactionType) {
+    private SortedSet<Transaction> extractTransactionsByType(int transactionType) {
         SortedSet<Transaction> transactionsByType = new TreeSet<>(new StatementComparator());
-        transactions.forEach(transaction -> {
-            if (transaction.getType().equals(transactionType)) {
-                transactionsByType.add(transaction);
-            }
-        });
+        if (transactionType == 1) {
+            transactions.forEach(transaction -> {
+                if (transaction.getType().isDebit()) {
+                    transactionsByType.add(transaction);
+                }
+            });
+        } else {
+            transactions.forEach(transaction -> {
+                if (transaction.getType().isPayment()) {
+                    transactionsByType.add(transaction);
+                }
+            });
+        }
         return transactionsByType;
     }
 

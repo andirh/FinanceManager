@@ -12,6 +12,7 @@ import transaction.TransactionType;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -57,7 +58,7 @@ class StatementTest {
     }
 
     @Test
-    void getAllPayments() throws NoPaymentsException, InvalidStatementException {
+    void getAllPayments() throws NoPaymentsException, InvalidStatementException, InvalidIdException {
         Transaction[] payments = monthlyStatement.getAllPayments().toArray(new Transaction[0]);
         assertEquals(payments[0], transaction3);
         assertEquals(payments[1], transaction2);

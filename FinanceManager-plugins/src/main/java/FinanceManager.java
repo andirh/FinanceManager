@@ -15,7 +15,7 @@ public class FinanceManager {
         ApplicationManager applicationManager = new ApplicationManager(statementRepository, accountRepository);
         applicationManager.init();
 
-        AccountSelection accountSelectionGui = new AccountSelection(applicationManager);
+        new AccountSelection(applicationManager);
 
 
     }
