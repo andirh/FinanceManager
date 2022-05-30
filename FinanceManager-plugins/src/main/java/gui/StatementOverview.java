@@ -39,6 +39,7 @@ public class StatementOverview extends JFrame {
 
         cancelButton.addActionListener(e -> {
             dispose();
+            new AccountOverview(applicationManager, account);
         });
 
         showStatementButton.addActionListener(e -> {

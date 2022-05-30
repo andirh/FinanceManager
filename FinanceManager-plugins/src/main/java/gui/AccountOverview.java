@@ -31,7 +31,7 @@ public class AccountOverview extends JFrame {
         this.account = account;
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTitle("FinanceManager");
-        setSize(400, 200);
+        setSize(450, 200);
         setVisible(true);
         setContentPane(accountOverviewPanel);
 
